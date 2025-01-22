@@ -1,6 +1,5 @@
 name: CI/CD for Backend and Frontend
 
-# Triggers for the workflow
 on:
   push:
     branches:
@@ -10,57 +9,65 @@ on:
       - main
 
 jobs:
-  # Job for building and testing Backend
+  # Backend Job
   backend-build:
     name: Backend Build and Test
     runs-on: ubuntu-latest
     steps:
-      # Step 1: Checkout repository code
+      # Checkout repository code
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      # Step 2: Set up JDK 17
+      # Verify project structure
+      - name: Verify Maven Wrapper
+        run: ls ./mvnw || echo "Maven Wrapper not found!"
+
+      # Set up JDK 17
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: '17'
           distribution: 'temurin'
 
-      # Step 3: Install Maven dependencies
+      # Install Maven dependencies
       - name: Install Dependencies
         run: ./mvnw dependency:resolve
 
-      # Step 4: Build the Spring Boot application
+      # Build the Spring Boot application
       - name: Build Backend
         run: ./mvnw clean package
 
-      # Step 5: Run unit tests for Backend
+      # Run Backend tests
       - name: Run Backend Tests
         run: ./mvnw test
 
-  # Job for building and testing Frontend
+  # Frontend Job
   frontend-build:
     name: Frontend Build and Test
     runs-on: ubuntu-latest
     steps:
-      # Step 1: Checkout repository code
+      # Checkout repository code
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      # Step 2: Set up Node.js environment
+      # Verify frontend structure
+      - name: Verify Frontend Structure
+        run: ls ./package.json || echo "package.json not found!"
+
+      # Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '16'
 
-      # Step 3: Install frontend dependencies
+      # Install frontend dependencies
       - name: Install Frontend Dependencies
         run: npm install
 
-      # Step 4: Run unit tests for Frontend
+      # Run Frontend tests
       - name: Run Frontend Tests
         run: npm test
 
-      # Step 5: Build the React application
+      # Build the React application
       - name: Build Frontend
         run: npm run build

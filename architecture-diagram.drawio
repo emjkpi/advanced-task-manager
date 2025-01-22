@@ -1,0 +1,43 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36" version="26.0.6">
+  <diagram name="Страница — 1" id="iP4cN0hEVDraoGNRMPEc">
+    <mxGraphModel dx="1434" dy="780" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="yZv13XelMzJPbfZPZfnc-5" value="&lt;br&gt;&lt;div&gt;&lt;br/&gt;&lt;/div&gt;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="yZv13XelMzJPbfZPZfnc-1" target="yZv13XelMzJPbfZPZfnc-2" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="yZv13XelMzJPbfZPZfnc-1" value="User" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="380" y="50" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="yZv13XelMzJPbfZPZfnc-7" value="&#xa;REST API (JSON)&#xa;&#xa;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="yZv13XelMzJPbfZPZfnc-2" target="yZv13XelMzJPbfZPZfnc-6" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="yZv13XelMzJPbfZPZfnc-2" value="&lt;b&gt;React Frontend&lt;br&gt;&lt;/b&gt;&lt;div&gt;- User Interface&lt;/div&gt;&lt;div&gt;- REST API Calls&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="350" y="190" width="180" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="yZv13XelMzJPbfZPZfnc-36" value="&#xa;Sends async notification messages&#xa;&#xa;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="yZv13XelMzJPbfZPZfnc-6" target="yZv13XelMzJPbfZPZfnc-33" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="yZv13XelMzJPbfZPZfnc-37" value="&#xa;Real-time updates&#xa;&#xa;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="yZv13XelMzJPbfZPZfnc-6" target="yZv13XelMzJPbfZPZfnc-34" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="yZv13XelMzJPbfZPZfnc-6" value="&lt;b&gt;Backend (Spring Boot)&lt;/b&gt;&lt;br&gt;&lt;div style=&quot;&quot;&gt;&lt;span class=&quot;hljs-bullet&quot;&gt;-&lt;/span&gt; Authentication (JWT + OAuth2.0)&lt;br/&gt;&lt;span class=&quot;hljs-bullet&quot;&gt;-&lt;/span&gt; Task Management (CRUD)&lt;br/&gt;&lt;span class=&quot;hljs-bullet&quot;&gt;-&lt;/span&gt; Notification Management&lt;br/&gt;&lt;span class=&quot;hljs-bullet&quot;&gt;  -&lt;/span&gt; Email Notifications (JavaMailSender)&lt;br/&gt;&lt;span class=&quot;hljs-bullet&quot;&gt;  -&lt;/span&gt; Real-time Notifications (WebSocket)&lt;/div&gt;&lt;div style=&quot;font-weight: bold;&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="310" y="350" width="260" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="yZv13XelMzJPbfZPZfnc-32" value="&lt;b&gt;Database (PostgreSQL)&lt;/b&gt;&lt;br&gt;&lt;div&gt;- User Table&lt;/div&gt;&lt;div&gt;- Task Table&lt;/div&gt;&lt;div&gt;- Notification Table&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" parent="1" vertex="1">
+          <mxGeometry x="380" y="570" width="120" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="yZv13XelMzJPbfZPZfnc-33" value="&lt;b&gt;RabbitMQ (Notification Queue)&lt;/b&gt;&lt;div&gt;&lt;div&gt;- Handles async notifications&lt;/div&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="100" y="540" width="160" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="yZv13XelMzJPbfZPZfnc-34" value="&lt;b&gt;WebSocket (Real-time Notifications)&lt;br&gt;&lt;/b&gt;&lt;div&gt;- Push updates to connected users&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="630" y="570" width="150" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="yZv13XelMzJPbfZPZfnc-35" value="&#xa;Stores user, task, and notification data&#xa;&#xa;" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="yZv13XelMzJPbfZPZfnc-6" target="yZv13XelMzJPbfZPZfnc-32" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,11 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:13.12
+    container_name: home_accountant_db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: s1mple
+      POSTGRES_PASSWORD: s1mple_passsword
+      POSTGRES_DB: home_accountant

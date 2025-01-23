@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="com.obiscr.chatgpt.settings.EasyCodeState">
+    <option name="projectFiles" value="$PROJECT_DIR$/src/main/java/com/example/home_accountant/controller/HomeController.java;C:/github/home-accountant/src/main/java/com/example/home_accountant/model/Expense.java;C:/github/home-accountant/src/main/java/com/example/home_accountant/HomeAccountantApplication.java;C:/github/home-accountant/src/main/resources/db/migration/V1__Create_expenses_table.sql;C:/github/home-accountant/src/test/java/com/example/home_accountant/HomeAccountantApplicationTests.java;C:/github/home-accountant/HELP.md;C:/github/home-accountant/README.md" />
+  </component>
+</project>

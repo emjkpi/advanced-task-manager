@@ -19,63 +19,42 @@ public class ExpenseService {
     @Autowired
     private UserRepository userRepository;
 
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+    }
+
+    public User getUserById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
+    }
+
     public Expense createExpense(Expense expense) {
         return expenseRepository.save(expense);
     }
 
-    public List<Expense> getAllExpenses() {
-        return expenseRepository.findAll();
+    public List<Expense> getExpensesByUser(User user) {
+        return expenseRepository.findByUser(user);
+    }
+
+    public Expense getExpenseById(Long id) {
+        return expenseRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Expense not found with id: " + id));
     }
 
     public Expense updateExpense(Long id, Expense expense) {
-        Expense existingExpense = expenseRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Expense not found with id " + id));
-
-        existingExpense.setCategory(expense.getCategory());
+        Expense existingExpense = getExpenseById(id);
+        existingExpense.setDescription(expense.getDescription());
         existingExpense.setAmount(expense.getAmount());
         existingExpense.setDate(expense.getDate());
-        existingExpense.setNote(expense.getNote());
         return expenseRepository.save(existingExpense);
-    }
-
-    public void deleteExpense(Long id) {
-        expenseRepository.deleteById(id);
-    }
-
-    public List<Expense> getExpensesByCategory(String category) {
-        return expenseRepository.findByCategory(category);
-    }
-
-    public List<Expense> getExpensesByDate(LocalDate date) {
-        return expenseRepository.findByDate(date);
-    }
-
-    public List<Expense> getExpensesByDateRange(LocalDate startDate, LocalDate endDate) {
-        return expenseRepository.findByDateBetween(startDate, endDate);
-    }
-
-    public Double getTotalAmountByDate(LocalDate date) {
-        return expenseRepository.getTotalAmountByDate(date);
-    }
-
-    public Double getTotalAmountByMonth(int year, int month) {
-        return expenseRepository.getTotalAmountByMonth(year, month);
-    }
-
-    public Double getTotalAmountByYear(int year) {
-        return expenseRepository.getTotalAmountByYear(year);
-    }
-
-    public Double getTotalAmountByDateRange(LocalDate startDate, LocalDate endDate) {
-        return expenseRepository.getTotalAmountByDateRange(startDate, endDate);
     }
 
     public List<Expense> getExpensesByDateRangeAndUser(LocalDate startDate, LocalDate endDate, User user) {
         return expenseRepository.findByDateBetweenAndUser(startDate, endDate, user);
     }
 
-    public User getUserById(Long userId) {
-        return userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with id " + userId));
+    public void deleteExpense(Long expenseId) {
+        expenseRepository.deleteById(expenseId);
     }
 }

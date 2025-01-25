@@ -24,36 +24,48 @@ public class ExpenseController {
     private PdfService pdfService;
 
     @PostMapping
-    public ResponseEntity<Expense> createExpense(@RequestBody Expense expense) {
+    public ResponseEntity<Expense> createExpense(@RequestBody Expense expense,
+                                                 @RequestHeader("Authorization") String token) {
+        String email = JwtUtil.getEmailFromToken(token.replace("Bearer ", ""));
+        User user = expenseService.getUserByEmail(email);
+
+        if (!user.getId().equals(expense.getUser().getId())) {
+            throw new RuntimeException("Access denied");
+        }
+
         Expense createdExpense = expenseService.createExpense(expense);
         return ResponseEntity.ok(createdExpense);
     }
 
     @GetMapping
-    public ResponseEntity<List<Expense>> getAllExpenses() {
-        List<Expense> expenses = expenseService.getAllExpenses();
+    public ResponseEntity<List<Expense>> getAllExpenses(@RequestHeader("Authorization") String token) {
+        String email = JwtUtil.getEmailFromToken(token.replace("Bearer ", ""));
+        User user = expenseService.getUserByEmail(email);
+
+        List<Expense> expenses = expenseService.getExpensesByUser(user);
         return ResponseEntity.ok(expenses);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Expense> updateExpense(@PathVariable Long id, @RequestBody Expense expense) {
+    public ResponseEntity<Expense> updateExpense(@PathVariable Long id, @RequestBody Expense expense,
+                                                 @RequestHeader("Authorization") String token) {
+        String email = JwtUtil.getEmailFromToken(token.replace("Bearer ", ""));
+        User user = expenseService.getUserByEmail(email);
+
+        Expense existingExpense = expenseService.getExpenseById(id);
+        if (!existingExpense.getUser().getId().equals(user.getId())) {
+            throw new RuntimeException("Access denied");
+        }
+
         Expense updatedExpense = expenseService.updateExpense(id, expense);
         return ResponseEntity.ok(updatedExpense);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteExpense(@PathVariable Long id) {
-        expenseService.deleteExpense(id);
-        return ResponseEntity.noContent().build();
-    }
-
     @GetMapping("/report/pdf")
-    public ResponseEntity<?> generatePdfReport(
-            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
-            @RequestParam("userId") Long userId,
-            @RequestHeader("Authorization") String token) {
-
+    public ResponseEntity<?> generatePdfReport(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+                                               @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+                                               @RequestParam("userId") Long userId,
+                                               @RequestHeader("Authorization") String token) {
         String email = JwtUtil.getEmailFromToken(token.replace("Bearer ", ""));
         User user = expenseService.getUserById(userId);
 
@@ -65,7 +77,6 @@ public class ExpenseController {
         double totalAmount = expenses.stream().mapToDouble(Expense::getAmount).sum();
 
         byte[] pdfReport = pdfService.generateExpenseReport(expenses, user, totalAmount);
-
         return ResponseEntity.ok()
                 .header("Content-Disposition", "attachment; filename=expense_report.pdf")
                 .body(pdfReport);

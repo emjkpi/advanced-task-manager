@@ -21,4 +21,8 @@ public class Expense {
     private LocalDate date;
 
     private String note;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 }

@@ -2,6 +2,7 @@ package com.example.home_accountant.controller;
 
 import com.example.home_accountant.model.User;
 import com.example.home_accountant.repository.UserRepository;
+import com.example.home_accountant.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,7 +30,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody User user) {
+    public ResponseEntity<?> login(@RequestBody User user) {
         User existingUser = userRepository.findByEmail(user.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -37,6 +38,8 @@ public class AuthController {
             return ResponseEntity.badRequest().body("Invalid credentials");
         }
 
-        return ResponseEntity.ok("Login successful");
+        String token = JwtUtil.generateToken(existingUser.getEmail());
+
+        return ResponseEntity.ok().body(token);
     }
 }

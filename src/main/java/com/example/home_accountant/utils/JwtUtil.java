@@ -1,4 +1,4 @@
-package com.example.home_accountant.util;
+package com.example.home_accountant.utils;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

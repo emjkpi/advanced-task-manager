@@ -1,6 +1,6 @@
 package com.example.home_accountant.filter;
 
-import com.example.home_accountant.util.JwtUtil;
+import com.example.home_accountant.utils.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

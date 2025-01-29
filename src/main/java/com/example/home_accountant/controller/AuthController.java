@@ -2,7 +2,7 @@ package com.example.home_accountant.controller;
 
 import com.example.home_accountant.model.User;
 import com.example.home_accountant.repository.UserRepository;
-import com.example.home_accountant.util.JwtUtil;
+import com.example.home_accountant.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;

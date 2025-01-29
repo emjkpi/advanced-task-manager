@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.example.home_accountant.util.JwtUtilTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2025-01-27T20:22:15" hostname="DESKTOP-KATGEPA" time="0.526">
+  <properties/>
+  <testcase name="testGetEmailFromToken()" classname="com.example.home_accountant.util.JwtUtilTest" time="0.49"/>
+  <testcase name="testGenerateToken()" classname="com.example.home_accountant.util.JwtUtilTest" time="0.014"/>
+  <testcase name="testValidateToken()" classname="com.example.home_accountant.util.JwtUtilTest" time="0.019"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

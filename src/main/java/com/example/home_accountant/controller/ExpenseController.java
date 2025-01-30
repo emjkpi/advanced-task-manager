@@ -1,6 +1,7 @@
 package com.example.home_accountant.controller;
 
 import com.example.home_accountant.dto.ExpenseDTO;
+import com.example.home_accountant.mapper.ExpenseMapper;
 import com.example.home_accountant.model.Expense;
 import com.example.home_accountant.model.User;
 import com.example.home_accountant.service.ExpenseService;
@@ -25,30 +26,24 @@ public class ExpenseController {
     @Autowired
     private PdfService pdfService;
 
+    @Autowired
+    private ExpenseMapper expenseMapper;
+
     @PostMapping
     public ResponseEntity<ExpenseDTO> createExpense(@RequestBody ExpenseDTO expenseDTO,
                                                     @RequestHeader("Authorization") String token) {
         String email = JwtUtil.getEmailFromToken(token.replace("Bearer ", ""));
         User user = expenseService.getUserByEmail(email);
 
-        System.out.println("Token email: " + email);
-        System.out.println("User ID from token: " + user.getId());
-        System.out.println("User ID from DTO: " + expenseDTO.getUserId());
-
         if (!user.getId().equals(expenseDTO.getUserId())) {
             throw new RuntimeException("Access denied");
         }
 
-        Expense expense = new Expense();
-        expense.setCategory(expenseDTO.getCategory());
-        expense.setDescription(expenseDTO.getDescription());
-        expense.setAmount(expenseDTO.getAmount());
-        expense.setDate(expenseDTO.getDate());
-        expense.setNote(expenseDTO.getNote());
+        Expense expense = expenseMapper.toEntity(expenseDTO);
         expense.setUser(user);
 
         Expense createdExpense = expenseService.createExpense(expense);
-        return ResponseEntity.ok(convertToDTO(createdExpense));
+        return ResponseEntity.ok(expenseMapper.toDto(createdExpense));
     }
 
     @GetMapping
@@ -58,7 +53,7 @@ public class ExpenseController {
 
         List<ExpenseDTO> expenses = expenseService.getExpensesByUser(user)
                 .stream()
-                .map(this::convertToDTO)
+                .map(expenseMapper::toDto)
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(expenses);
@@ -75,41 +70,42 @@ public class ExpenseController {
             throw new RuntimeException("Access denied");
         }
 
-        existingExpense.setCategory(expenseDTO.getCategory());
-        existingExpense.setDescription(expenseDTO.getDescription());
-        existingExpense.setAmount(expenseDTO.getAmount());
-        existingExpense.setDate(expenseDTO.getDate());
-        existingExpense.setNote(expenseDTO.getNote());
+        Expense updatedExpense = expenseMapper.toEntity(expenseDTO);
+        updatedExpense.setId(id);
+        updatedExpense.setUser(user);
 
-        Expense updatedExpense = expenseService.updateExpense(id, existingExpense);
-        return ResponseEntity.ok(convertToDTO(updatedExpense));
+        Expense savedExpense = expenseService.updateExpense(id, updatedExpense);
+        return ResponseEntity.ok(expenseMapper.toDto(savedExpense));
     }
 
-    @GetMapping("/report/pdf")
-    public ResponseEntity<?> generatePdfReport(@RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-                                               @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
-                                               @RequestHeader("Authorization") String token) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteExpense(@PathVariable Long id,
+                                                @RequestHeader("Authorization") String token) {
         String email = JwtUtil.getEmailFromToken(token.replace("Bearer ", ""));
         User user = expenseService.getUserByEmail(email);
 
-        List<Expense> expenses = expenseService.getExpensesByDateRangeAndUser(startDate, endDate, user);
-        double totalAmount = expenses.stream().mapToDouble(Expense::getAmount).sum();
+        Expense expense = expenseService.getExpenseById(id);
+        if (!expense.getUser().getId().equals(user.getId())) {
+            throw new RuntimeException("Access denied");
+        }
 
-        byte[] pdfReport = pdfService.generateExpenseReport(expenses, user, totalAmount);
-        return ResponseEntity.ok()
-                .header("Content-Disposition", "attachment; filename=expense_report.pdf")
-                .body(pdfReport);
+        expenseService.deleteExpense(id);
+        return ResponseEntity.ok("Expense deleted successfully");
     }
 
-    private ExpenseDTO convertToDTO(Expense expense) {
-        ExpenseDTO dto = new ExpenseDTO();
-        dto.setId(expense.getId());
-        dto.setCategory(expense.getCategory());
-        dto.setDescription(expense.getDescription());
-        dto.setAmount(expense.getAmount());
-        dto.setDate(expense.getDate());
-        dto.setNote(expense.getNote());
-        dto.setUserId(expense.getUser().getId());
-        return dto;
+    @GetMapping("/filter")
+    public ResponseEntity<List<ExpenseDTO>> getExpensesByDateRange(
+            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @RequestHeader("Authorization") String token) {
+        String email = JwtUtil.getEmailFromToken(token.replace("Bearer ", ""));
+        User user = expenseService.getUserByEmail(email);
+
+        List<ExpenseDTO> expenses = expenseService.getExpensesByDateRangeAndUser(startDate, endDate, user)
+                .stream()
+                .map(expenseMapper::toDto)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(expenses);
     }
 }

@@ -108,4 +108,22 @@ public class ExpenseController {
 
         return ResponseEntity.ok(expenses);
     }
+    @GetMapping("/report/pdf")
+    public ResponseEntity<byte[]> generatePdfReport(
+            @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            @RequestHeader("Authorization") String token) {
+
+        String email = JwtUtil.getEmailFromToken(token.replace("Bearer ", ""));
+        User user = expenseService.getUserByEmail(email);
+
+        List<Expense> expenses = expenseService.getExpensesByDateRangeAndUser(startDate, endDate, user);
+        double totalAmount = expenses.stream().mapToDouble(Expense::getAmount).sum();
+
+        byte[] pdfReport = pdfService.generateExpenseReport(expenses, user, totalAmount);
+
+        return ResponseEntity.ok()
+                .header("Content-Disposition", "attachment; filename=expense_report.pdf")
+                .body(pdfReport);
+    }
 }
